@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCQ Test with Gaze Detection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+    <button id="fullScreenButton">Go Full Screen</button>
+    <div class="container">
+        <div class="camera">
+            <video autoplay></video>
+        </div>
+        <div class="test">
+            <h1>MCQ Test</h1>
+            <form id="mcqForm">
+                <p>Question 1: What is the capital of France?</p>
+                <label>
+                    <input type="radio" name="answer" value="a"> Paris
+                </label>
+                <label>
+                    <input type="radio" name="answer" value="b"> London
+                </label>
+                <label>
+                    <input type="radio" name="answer" value="c"> Rome
+                </label>
+                <label>
+                    <input type="radio" name="answer" value="d"> Berlin
+                </label>
+                <button type="button" onclick="submitAnswer()">Submit</button>
+            </form>
+            <p id="result"></p>
+        </div>
+    </div>
+    <button id="stopButton">Stop Video</button>
+</body>
+</html>
