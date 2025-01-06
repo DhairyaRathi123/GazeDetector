@@ -2,13 +2,13 @@ from setuptools import setup, find_packages
 
 setup(
     name='gazedetector',
-    version='0.2',
+    version='0.4',  # Ensure the version number is updated
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
         'flask',
         'flask-cors',
-        'opencv-python-headless',
+        'opencv-python',  # Use the regular version of OpenCV
     ],
     entry_points={
         'console_scripts': [

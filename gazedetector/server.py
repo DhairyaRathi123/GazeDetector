@@ -1,28 +1,24 @@
-from flask import Flask, jsonify, Response, send_from_directory
+from flask import Flask, jsonify, Response, send_from_directory, request
 from flask_cors import CORS
-from .detector import GazeDetector
-import cv2
+from detector import GazeDetector
 import os
 
 app = Flask(__name__)
 CORS(app)
 
-detector = None
-
-def gen_frames():
-    while True:
-        status, frame = detector.detect()
-        if frame is None:
-            break
-        else:
-            _, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+detector = GazeDetector()
 
 @app.route('/video_feed')
 def video_feed():
-    return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+    def gen():
+        while True:
+            status, frame = detector.detect()
+            if frame is not None:
+                _, buffer = cv2.imencode('.jpg', frame)
+                frame = buffer.tobytes()
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+    return Response(gen(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/status')
 def status():
@@ -36,7 +32,7 @@ def index():
 @app.route('/toggle_camera', methods=['POST'])
 def toggle_camera():
     global detector
-    if detector is not None:
+    if detector:
         detector.release()
         detector = None
         return jsonify(status="Camera turned off")
@@ -44,22 +40,25 @@ def toggle_camera():
         detector = GazeDetector()
         return jsonify(status="Camera turned on")
 
-def run_server(show_screen=True, realtime=True, htmlembedd=False):
+def run_server(toggle_button=True, paste_in_html="index.html", pos={"w": "200px", "h": "100px"}, alignment="mid"):
     global detector
-    detector = GazeDetector()
 
-    if show_screen:
-        while True:
-            status, frame = detector.detect()
-            if frame is not None:
-                cv2.imshow('Gaze Detector', frame)
-                if cv2.waitKey(1) & 0xFF == ord('q'):
-                    break
-        detector.release()
-        cv2.destroyAllWindows()
-    elif htmlembedd:
-        app.run(debug=True)
-    else:
-        while True:
-            status, _ = detector.detect()
-            print(status)
+    # Save user HTML file to static directory if provided
+    if paste_in_html:
+        html_file = os.path.join(os.path.dirname(__file__), 'static', paste_in_html)
+        if not os.path.exists(html_file):
+            raise FileNotFoundError(f"The specified HTML file '{paste_in_html}' does not exist.")
+        
+    # Add positional styling for facecam
+    facecam_style = f"position: fixed; top: 10px; right: 10px; width: {pos['w']}; height: {pos['h']};"
+    if alignment == "mid":
+        facecam_style = f"position: fixed; top: 10px; right: 50%; transform: translateX(50%); width: {pos['w']}; height: {pos['h']};"
+
+    # Save the customized index.html content with positional styling
+    with open(html_file, 'r') as file:
+        content = file.read()
+    content = content.replace('<img src="http://127.0.0.1:5000/video_feed" id="facecam">', f'<img src="http://127.0.0.1:5000/video_feed" id="facecam" style="{facecam_style}">')
+    with open(html_file, 'w') as file:
+        file.write(content)
+
+    app.run(debug=True, port=5000)
