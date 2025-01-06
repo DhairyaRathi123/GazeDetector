@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaze Detection</title>
+    <style>
+        #gaze-status {
+            position: absolute;
+            left: 200px;
+            top: 100px;
+            font-size: 20px;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gaze Detection</h1>
+    <video id="videoElement" width="640" height="480" autoplay></video>
+    <div id="gaze-status">Waiting for gaze status...</div>
+
+    <script>
+        // Access webcam
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function(stream) {
+                const videoElement = document.getElementById('videoElement');
+                videoElement.srcObject = stream;
+
+                // Send webcam frame to the server every second
+                setInterval(() => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = videoElement.videoWidth;
+                    canvas.height = videoElement.videoHeight;
+                    canvas.getContext('2d').drawImage(videoElement, 0, 0);
+
+                    const frameData = canvas.toDataURL('image/jpeg');
+
+                    fetch('/process-frame', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ frame: frameData })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('gaze-status').innerText = data.status;
+                    })
+                    .catch(err => {
+                        console.error('Error sending frame:', err);
+                    });
+                }, 1000); // Send frame every second
+            })
+            .catch(function(err) {
+                console.error('Error accessing webcam:', err);
+            });
+    </script>
+</body>
+</html>

@@ -1,3 +1,2 @@
 import gazedetector
-
-gazedetector.run_server()
+gaze_detector.run_server()

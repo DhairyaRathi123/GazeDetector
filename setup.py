@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='gazedetector',  # Name of your package
-    version='0.8.1',      # Package version
+    version='0.8.2',      # Package version
     packages=find_packages(),  # Automatically find all the packages in the directory
     author='Dhairya Rathi',   # Specify the author's name
     author_email='Drdhairya12@outlook.com',  # Specify the author's email
