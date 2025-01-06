@@ -1,0 +1,18 @@
+[project]
+name = "GazeDetector"
+version = "0.0.1"
+authors = [
+  { name="D_LABS", email="Drdhairya12@outlook.com" },
+]
+description = "web integration of GazeDetector"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Homepage = "https://github.com/DhairyaRathi123/GazeDetector"
+Issues = "https://github.com/DhairyaRathi123/GazeDetector/issues"
