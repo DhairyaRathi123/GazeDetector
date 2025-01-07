@@ -18,6 +18,7 @@ setup(
     install_requires=[     # List of dependencies
         'flask',
         'opencv-python',
+        'mediapipe'
         # add any other dependencies here
     ],
     python_requires='>=3.6',  # Minimum Python version required
