@@ -1,6 +1,7 @@
-##NO COST NO API EASY TO EMBED GAZE DETECTOR
+## NO COST NO API EASY TO EMBED GAZE DETECTOR
 ```
 pip install gazedetector
+```
 ```
 import gazedetector
 gazedetector.run_server()
