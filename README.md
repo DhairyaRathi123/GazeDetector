@@ -1,3 +1,5 @@
+## Only till python v. 3.12 owing to mediapipe issue 
+https://github.com/google-ai-edge/mediapipe/issues/5812
 ## NO COST NO API EASY TO EMBED GAZE DETECTOR
 ```
 pip install gazedetector
