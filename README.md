@@ -1,4 +1,5 @@
 ## Only till python v. 3.12 owing to mediapipe issue 
+## OPEN TO CONTRIBUTION
 https://github.com/google-ai-edge/mediapipe/issues/5812
 ## NO COST NO API EASY TO EMBED GAZE DETECTOR
 ```
